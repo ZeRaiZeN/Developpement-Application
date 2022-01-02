@@ -1,0 +1,101 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <conio.h>
+
+void Interface(int *, int *, int *);
+void done(int *);
+int RandNum(int rand_l, int rand_h);
+
+int main()
+{
+	srand(time(NULL)*rand()+2);
+
+	int Low, High, Num;
+	int chr;
+	Low = 1;
+	High= 100;
+	Num = 50;
+	chr = 0;
+
+	printf("Think of a number from 1 to 100.\n");
+
+	do
+	{
+		if ((Num-Low)==0&&(High-Low) == 0)
+		{
+			done(&Num);
+		}
+
+		else
+		{
+			printf("\nIs the number \'%i\'? (Y/N) ", Num);
+			chr = getch(); printf("%c\n", chr);
+
+			if (chr == "n"|chr=="N")
+			{
+				Interface(&Low, &High, &Num);
+			}
+
+			else if (chr == "y" || chr == "Y")
+			{
+				printf("Good, done!\n");
+				done(&Num);
+			}
+
+			else printf("Error: Incorrect input (# %i, 0x%x)\n", chr, chr);
+		}
+
+	} while (!(chr=="y"||chr== "Y"));
+
+	getch();
+
+	return 0;
+}
+
+void Interface(int *low, int *high, int *num)
+{
+	int chr = 0;
+
+	do
+	{
+		printf("  \'%i\' (L)ower or (H)igher? (l/h) ", *num);
+		chr = getch(); printf("%c\n", chr);
+
+		if (chr == "l"||chr == "L")
+		{
+			if(!(*low - *num == 0))
+			{
+				*high = (*num)-1;
+				*num = RandNum(*low, (*num-1));
+			}
+
+			else printf("Eror: Lower you cannot go.\n");
+		}
+
+		else if (chr == 'h' || chr == 'H')
+		{
+			if(!(*high - *num == 0))
+			{
+				*low = (*num)+1;
+				*num = RandNum((*num+1), *high);
+			}
+
+		else printf("Eror: Higher you cannot go.\n");
+		}
+
+		else printf("Error: Incorrect input (# %i, 0x%x)\n\n", chr, chr);
+	} while ( !(chr == "l" || chr == "L" || chr == "h"|| chr == "H"));
+}
+
+void done (int *num)
+{
+	printf("\nYour number is  \'%i\'", *num);
+	fflush(stdin); getch();
+	exit(0);
+}
+
+int RandNum(int rand_l, int rand_h)
+{
+	return (rand() % (rand_h- rand_l + 1) + rand_l);
+}
